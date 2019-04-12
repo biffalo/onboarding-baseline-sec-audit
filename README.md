@@ -35,19 +35,27 @@ Collection of scripts for use in windows domain environment to minimize risk by 
 
 -Disables IE Enhanced Security Configuration as it will interfere with our office365 script.
 
--Launches **office-365-have-i-been-pwned script**. You'll be prompted for the office365 admin creds for the client. Please enter them. The script will look at all email accounts in the customer tenancy and check them against haveibeenpwned. It will then generate a file called **BreachedAccounts.csv** and dump it in $working. It will look something like the example below. You do not need to do anything with it yet. I make my csv pretty with excel so yours might look different
+-Launches **office-365-have-i-been-pwned script**. You'll be prompted for the office365 admin creds for the client. Please enter them. The script will look at all email accounts in the customer tenancy and check them against haveibeenpwned. It will then generate a file called **BreachedAccounts.csv** and dump it in $working. It will look something like the example below. You do not need to do anything with it yet. I make my csv pretty with excel so yours might look different.
+
+![office365example](https://github.com/biffalo/onboarding-baseline-sec-audit/raw/master/screenshots/office365-breaches.jpg)
 
 =========================================================================
 
 -Next the script will launch the **aduc-bad-pass-check.ps1** script from $working. This is where we xreference compromised passwords from haveibeenpwned against customer domain accounts without any data leaving their server. This will take quite some time, but does have a progress bar. This would be a good time to do some other work while you wait. Upon completion a file called **Aduc-Compromised-Accounts.txt** will be dumped in $working and will look like the example below. This will give you accounts with hashes that are in hibp, accounts with no pw, accounts with passwords that are dictionary words etc. 
 
+![aducpwnexample](https://github.com/biffalo/onboarding-baseline-sec-audit/raw/master/screenshots/aduc-pw-pwnage.jpg)
+
 ==========================================================================
 
 -Next the script will launch **inactive-user-check.ps1** from $working. This will search for any user that hasn't logged on in 90 days or more. It will generate at file in $working called **inactive-accounts.txt**. You should go through this list and disable any human accounts that haven't logged on in 90 days or more. Please note the "lastlogondate" field to make sure the account actually hasn't logged in for 90+ days so you can avoid disabling someone in error. DO NOT disable accounts that are obvious builtin/service accounts for windows/vendors. When in doubt, please check with customer. Example of inactive-accounts.txt below.
 
+![inactiveexample](https://github.com/biffalo/onboarding-baseline-sec-audit/raw/master/screenshots/inactive-users.jpg)
+
 ==========================================================================
 
 -Lastley the script will launch **admin-group-checker.ps1** from $working. This will show you any account contained in any admin group on the server (local or domain). Best practice is to not have any end users be any kind of admin on the domain because if they get/bug ransomware they will have access to everything and that can be VERY bad. Please remove end users from the admin groups. You'll want to consult with the POC for the site to explain that you're doing this and why before pulling the trigger. The script will dump **admin-group-report.txt** to $working. Example below.
+
+![adminuserexample](https://github.com/biffalo/onboarding-baseline-sec-audit/raw/master/screenshots/admin-group.jpg)
 
 ===========================================================================
 
