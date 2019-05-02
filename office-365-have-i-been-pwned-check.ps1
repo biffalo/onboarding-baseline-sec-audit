@@ -3,8 +3,8 @@ Install-Module MSOnline -force
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 Connect-MsolService
-$UserAgent = “HaveIBeenPwned Powershell Module”
-$baseUri = "https://haveibeenpwned.com/api"
+$UserAgent = “$((Get-MsolCompanyInformation).DisplayName) Security Audit”
+$baseUri = "https://haveibeenpwned.com/api/v2/"
 $users = Get-msoluser -All
   
 foreach ($user in $users) {
