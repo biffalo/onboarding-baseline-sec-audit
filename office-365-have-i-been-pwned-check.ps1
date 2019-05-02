@@ -1,13 +1,9 @@
-﻿Install-Module -Name AzureAD -force
+Install-Module -Name AzureAD -force
 Install-Module MSOnline -force
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 Connect-MsolService
-  
-$headers = @{
-    "User-Agent"  = "$((Get-MsolCompanyInformation).DisplayName) Customer Account Check"
-    "api-version" = 2
-}
+$UserAgent = “HaveIBeenPwned Powershell Module”
 $baseUri = "https://haveibeenpwned.com/api"
 $users = Get-msoluser -All
   
@@ -19,7 +15,7 @@ foreach ($user in $users) {
         $uri = "$baseUri/breachedaccount/$uriEncodeEmail"
         $breachResult = $null
         try {
-            [array]$breachResult = Invoke-RestMethod -Uri $uri -Headers $headers -ErrorAction SilentlyContinue
+            [array]$breachResult = Invoke-RestMethod -Uri $uri -UserAgent $UserAgent -ErrorAction SilentlyContinue
         }
         catch {
             if($error[0].Exception.response.StatusCode -match "NotFound"){
